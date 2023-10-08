@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  hbase:
+    build:
+      dockerfile: hbase/DockerfileHBase
+    env_file:
+      - hbase/hbase.env
+    restart: unless-stopped
+
+    ports:
+      - 16010:16010
+      - 9870:9870
+      - 9000:9000
+      - 7077:7077
+      - 4040:4040
+      - 8088:8088
+      - 8020:8020
+      - 22:22
+  python_app:
+    build: 
+      dockerfile: python/DockerfilePython
+    volumes:
+      - ..:/workspace:cached
+      - ~/.gitconfig:/home/vscode/.gitconfig
+      - ~/.ssh:/home/vscode/.ssh
+    command: sleep infinity

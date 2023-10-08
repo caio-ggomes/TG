@@ -1,0 +1,48 @@
+
+CONNECTION_HOST: hbase
+CONNECTION_PORT: 9090
+
+TABLE_NAME: teste_1
+
+COLUMN_FAMILIES:
+  - &ESPACO_AEREO espaco_aereo
+  - &INFO_AERODROMO info_aerodromo
+  - &INFO_VOO info_voo
+
+DATABASES_INFO:
+  # bimtra:
+  #   SAMPLE_PATH: app/samples/bimtra-ita-23jan-31jan.csv
+  #   COLUMN_FAMILY_MAP:
+  #     *ESPACO_AEREO: []
+  #     *INFO_AERODROMO: []
+  #     *INFO_VOO: []
+  # cat62:
+  #   SAMPLE_PATH: app/samples/cat62-ita-23jan-31jan.csv
+  #   COLUMN_FAMILY_MAP:
+  #     *ESPACO_AEREO: []
+  #     *INFO_AERODROMO: []
+  #     *INFO_VOO: []
+  # seta:
+  #   SAMPLE_PATH: app/samples/setavoo-ita-23jan-31jan.csv
+  #   COLUMN_FAMILY_MAP:
+  #     *ESPACO_AEREO: []
+  #     *INFO_AERODROMO: []
+  #     *INFO_VOO: []
+  # sisceab:
+  #   SAMPLE_PATH: app/samples/voosisceab-ita-23jan-31jan.csv
+  #   COLUMN_FAMILY_MAP:
+  #     *ESPACO_AEREO: []
+  #     *INFO_AERODROMO: []
+  #     *INFO_VOO: []
+  # tatic:
+  #   SAMPLE_PATH: app/samples/tatic-ita-23jan-31jan.csv
+  #   COLUMN_FAMILY_MAP:
+  #     *ESPACO_AEREO: []
+  #     *INFO_AERODROMO: []
+  #     *INFO_VOO: []
+  vra:
+    SAMPLE_PATH: app/samples/vra-ita-23jan-31jan.csv
+    COLUMN_FAMILY_MAP:
+      *ESPACO_AEREO: []
+      *INFO_AERODROMO: ['icaoaeroportoorigem']
+      *INFO_VOO: ['numvoo', 'numassentos']

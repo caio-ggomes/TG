@@ -1,0 +1,21 @@
+# this source already have JAVA_HOME env
+FROM ubuntu:focal
+
+RUN apt-get update && apt install openjdk-8-jdk -y && apt-get install -y tar && mkdir -p /opt/hbase
+RUN apt-get install -y ssh openssh-server
+ADD https://archive.apache.org/dist/hbase/2.4.15/hbase-2.4.15-bin.tar.gz /opt/hbase
+RUN tar -xzvf /opt/hbase/hbase-2.4.15-bin.tar.gz --directory=/opt/hbase && rm /opt/hbase/hbase-2.4.15-bin.tar.gz
+ADD https://dlcdn.apache.org/hadoop/common/hadoop-3.3.5/hadoop-3.3.5.tar.gz /opt/
+RUN mkdir /opt/hadoop && tar -xzvf /opt/hadoop-3.3.5.tar.gz --directory=/opt/hadoop && rm /opt/hadoop-3.3.5.tar.gz
+COPY ./hbase/hadoop_conf/* /opt/hadoop/hadoop-3.3.5/etc/hadoop/
+RUN mkdir -p /opt/hadoop/hadoop-3.3.5/data/namenode && mkdir -p /opt/hadoop/hadoop-3.3.5/data/datanode
+RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
+  cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
+  chmod 0600 ~/.ssh/authorized_keys
+RUN mkdir -p /opt/hadoop/hadoop-3.3.5/logs && mkdir -p /opt/hadoop/hadoop-3.3.5/tmp
+COPY ./hbase/hbase_conf/* /opt/hbase/hbase-2.4.15/conf/
+COPY hbase/config /root/.ssh
+RUN chmod 600 /root/.ssh/config
+EXPOSE 9000 7077 4040 8020 22 9870 16010 8088 8020
+RUN service ssh start && ./opt/hadoop/hadoop-3.3.5/bin/hdfs namenode -format
+CMD service ssh start &&  start-all.sh  && /opt/hbase/hbase-2.4.15/bin/start-hbase.sh && /opt/hbase/hbase-2.4.15/bin/hbase-daemon.sh start thrift &&  sleep infinity
