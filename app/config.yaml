@@ -6,7 +6,9 @@ TABLE_NAME: teste_1
 
 COLUMN_FAMILIES:
   - &ESPACO_AEREO espaco_aereo
+  - &EVENTOS eventos
   - &INFO_AERODROMO info_aerodromo
+  - &INFO_AERONAVE info_aeronave
   - &INFO_VOO info_voo
 
 DATABASES_INFO:
@@ -28,21 +30,28 @@ DATABASES_INFO:
   #     *ESPACO_AEREO: []
   #     *INFO_AERODROMO: []
   #     *INFO_VOO: []
-  # sisceab:
-  #   SAMPLE_PATH: app/samples/voosisceab-ita-23jan-31jan.csv
-  #   COLUMN_FAMILY_MAP:
-  #     *ESPACO_AEREO: []
-  #     *INFO_AERODROMO: []
-  #     *INFO_VOO: []
-  # tatic:
-  #   SAMPLE_PATH: app/samples/tatic-ita-23jan-31jan.csv
-  #   COLUMN_FAMILY_MAP:
-  #     *ESPACO_AEREO: []
-  #     *INFO_AERODROMO: []
-  #     *INFO_VOO: []
-  vra:
-    SAMPLE_PATH: app/samples/vra-ita-23jan-31jan.csv
+  sisceab:
+    # SAMPLE_PATH: app/samples/voosisceab-ita-23jan-31jan.csv
+    SAMPLE_PATH: app/samples/sisceab-23jan.csv
     COLUMN_FAMILY_MAP:
       *ESPACO_AEREO: []
-      *INFO_AERODROMO: ['icaoaeroportoorigem']
-      *INFO_VOO: ['numvoo', 'numassentos']
+      *EVENTOS: []
+      *INFO_AERODROMO: ['co_addep', 'co_addes']
+      *INFO_AERONAVE: ['co_modelo']
+      *INFO_VOO: ['co_indicativo', 'dh_inicio', 'dh_fim', 'li_tipovoo']
+  tatic:
+    # SAMPLE_PATH: app/samples/tatic-ita-23jan-31jan.csv
+    SAMPLE_PATH: app/samples/tatic-23jan.csv
+    COLUMN_FAMILY_MAP:
+      *ESPACO_AEREO: []
+      *EVENTOS: ['cpush', 'wpush', 'wtaxi', 'taxi', 'hold', 'crwy', 'cdep', 'eta', 'arr', 'cpos']
+      *INFO_AERODROMO: []
+      *INFO_AERONAVE: []
+      *INFO_VOO: []
+  # vra:
+  #   SAMPLE_PATH: app/samples/vra-ita-23jan-31jan.csv
+  #   COLUMN_FAMILY_MAP:
+  #     *ESPACO_AEREO: []
+  #     *INFO_AERODROMO: ['partidareal', 'chegadareal']
+  #     *INFO_AERONAVE: ['numassentos', 'modeloequip']
+  #     *INFO_VOO: ['empresa', 'partidaprevista', 'chegadaprevista']

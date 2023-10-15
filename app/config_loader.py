@@ -40,6 +40,6 @@ class ConfigLoader:
             sample_path=self.get_sample_path(database_name),
             column_family_map=self.get_column_family_map(database_name),
         )
-        if database_name != "vra":
-            kwargs.update(dict(vra_sample_path=self.get_sample_path("vra")))
+        if database_name != "sisceab":
+            kwargs.update(dict(sisceab_sample_path=self.get_sample_path("sisceab")))
         return kwargs

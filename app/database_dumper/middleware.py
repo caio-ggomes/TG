@@ -19,5 +19,5 @@ class DumperMiddleware:
         "tatic": TaticDumper,
         "vra": VraDumper,
     }
-    def get_dumper(self, dumper_name: str, sample_path: str, column_family_map: Dict[str, List[str]]) -> Dumper:
-        return self.DUMPER_MAP[dumper_name](sample_path, column_family_map)
+    def get_dumper(self, dumper_name: str, sample_path: str, column_family_map: Dict[str, List[str]], **kwargs) -> Dumper:
+        return self.DUMPER_MAP[dumper_name](sample_path, column_family_map, **kwargs)
