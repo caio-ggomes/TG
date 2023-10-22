@@ -34,9 +34,9 @@ class ConfigLoader:
     def get_column_family_map(self, database_name: str) -> Dict[str, List[str]]:
         return self.config["DATABASES_INFO"][database_name]["COLUMN_FAMILY_MAP"]
 
-    def get_dumper_kwargs(self, database_name: str) -> dict:
+    def get_loader_kwargs(self, database_name: str) -> dict:
         kwargs = dict(
-            dumper_name=database_name,
+            loader_name=database_name,
             sample_path=self.get_sample_path(database_name),
             column_family_map=self.get_column_family_map(database_name),
         )

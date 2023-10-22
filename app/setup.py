@@ -1,6 +1,6 @@
 import happybase
 from config_loader import ConfigLoader
-from database_dumper.middleware import DumperMiddleware
+from database_loader.middleware import DatabaseLoaderMiddleware
 
 
 CONFIG_PATH = "app/config.yaml"
@@ -33,12 +33,12 @@ def main():
     table = setup_table(connection, config_loader)
 
     for database_name in config_loader.database_names:
-        print(f"Setting up {database_name} dumper.")
-        dumper = DumperMiddleware().get_dumper(
-            **config_loader.get_dumper_kwargs(database_name),
+        print(f"Setting up {database_name} loader.")
+        loader = DatabaseLoaderMiddleware().get_loader(
+            **config_loader.get_loader_kwargs(database_name),
         )
-        print(f"Dumping data from {database_name} to table.")
-        dumper.dump(table)
+        print(f"Loading data from {database_name} to table.")
+        loader.load(table)
 
     print("Finished column family database setup. Closing HBase connection.")
     connection.close()

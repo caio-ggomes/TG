@@ -3,10 +3,10 @@ import numpy as np
 import pandas as pd
 
 from functools import cached_property
-from database_dumper.interface import Dumper
+from database_loader.interface import DatabaseLoader
 
 
-class SisceabDumper(Dumper):
+class SisceabDatabaseLoader(DatabaseLoader):
     @cached_property
     def _id_voo(self) -> pd.Series:
         return self.sample['co_indicativo']
@@ -37,7 +37,7 @@ class SisceabDumper(Dumper):
             )
         return column_values
 
-    def dump(self, table: happybase.Table) -> None:
+    def load(self, table: happybase.Table) -> None:
         with table.batch() as batch:
             rows = self.sample.index
             for row in rows:

@@ -2,16 +2,16 @@ from datetime import datetime
 from typing import Dict, List
 import pandas as pd
 
-from database_dumper.interface import SingleValueGivenRowColumnSisceabParsingDumper
+from database_loader.interface import SingleCellValueSisceabParsingDatabaseLoader
 
 
-class TaticDumper(SingleValueGivenRowColumnSisceabParsingDumper):
+class TaticDatabaseLoader(SingleCellValueSisceabParsingDatabaseLoader):
     def __init__(self, sample_path: str, column_family_map: Dict[str, List[str]], sisceab_sample_path: str) -> None:
-        # self.sample = pd.read_csv(sample_path, delimiter=";").sort_values(['dep', 'arr'])
-        self.sample = pd.read_csv(sample_path).sort_values(['dep', 'arr'])
+        self.sample = pd.read_csv(sample_path, delimiter=";").sort_values(['dep', 'arr'])
+        # self.sample = pd.read_csv(sample_path).sort_values(['dep', 'arr'])
         self.column_family_map = column_family_map
-        # self.sisceab_sample = pd.read_csv(sisceab_sample_path, delimiter=";")
-        self.sisceab_sample = pd.read_csv(sisceab_sample_path)
+        self.sisceab_sample = pd.read_csv(sisceab_sample_path, delimiter=";")
+        # self.sisceab_sample = pd.read_csv(sisceab_sample_path)
 
     def _get_departure_value(self, id_voo: str, horario_inicio: datetime, horario_fim: datetime, column: str):
         same_flight_id = (self.sample['callsign'] == id_voo)

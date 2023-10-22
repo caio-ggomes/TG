@@ -7,21 +7,20 @@ from functools import cached_property
 from typing import Dict, List
 
 
-class Dumper(ABC):
+class DatabaseLoader(ABC):
     def __init__(self, sample_path: str, column_family_map: Dict[str, List[str]]) -> None:
-        # self.sample = pd.read_csv(sample_path, delimiter=";")
-        self.sample = pd.read_csv(sample_path)
+        self.sample = pd.read_csv(sample_path, sep=";")
         self.column_family_map = column_family_map
 
     @abstractmethod
-    def dump(self, table: happybase.Table) -> None:
+    def load(self, table: happybase.Table) -> None:
         raise NotImplementedError
 
 
-class SisceabParsingDumper(Dumper):
+class SisceabParsingDatabaseLoader(DatabaseLoader):
     def __init__(self, sample_path: str, column_family_map: Dict[str, List[str]], sisceab_sample_path: str) -> None:
         super().__init__(sample_path, column_family_map)
-        self.sisceab_sample = pd.read_csv(sisceab_sample_path, delimiter=";")
+        self.sisceab_sample = pd.read_csv(sisceab_sample_path, sep=";")
 
     @cached_property
     def _id_voo(self) -> pd.Series:
@@ -51,8 +50,8 @@ class SisceabParsingDumper(Dumper):
         raise NotImplementedError(f"Encode method not implemented for object of type {type(object)}")
 
 
-class SingleValueGivenRowColumnSisceabParsingDumper(SisceabParsingDumper):
-    SLICE_SIZE = 500
+class SingleCellValueSisceabParsingDatabaseLoader(SisceabParsingDatabaseLoader):
+    BATCH_SIZE = 500
 
     @abstractmethod
     def get_value(self, id_voo: str, horario_inicio: datetime, horario_fim: datetime, column: str):
@@ -71,12 +70,11 @@ class SingleValueGivenRowColumnSisceabParsingDumper(SisceabParsingDumper):
             )
         return column_values
 
-    def dump(self, table: happybase.Table) -> None:
-        
+    def load(self, table: happybase.Table) -> None:
         rows = self.sisceab_sample.index
         sliced_rows_indexes = [
-            rows[counter:min(counter + self.SLICE_SIZE, len(rows) - 1)]
-            for counter in range(0, len(rows), self.SLICE_SIZE)
+            rows[counter:min(counter + self.BATCH_SIZE, len(rows) - 1)]
+            for counter in range(0, len(rows), self.BATCH_SIZE)
         ]
         for sliced_rows_index in sliced_rows_indexes:
             with table.batch() as batch:
