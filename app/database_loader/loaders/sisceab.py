@@ -18,14 +18,6 @@ class SisceabDatabaseLoader(DatabaseLoader):
     def _get_row_key(self, row: int) -> pd.Series:
         return self._id_voo.loc[row] + " " +  self._horario_partida.loc[row].strftime("%Y-%m-%d %H:%M:%S")
 
-    @staticmethod
-    def _encode(object):
-        if isinstance(object, str):
-            return object.encode()
-        elif isinstance(object, np.int64):
-            return str(object).encode()
-        raise NotImplementedError(f"Encode method not implemented for object of type {type(object)}")
-
     def _get_column_values(self, row: int) -> dict:
         column_values = dict()
         for column_family, columns in self.column_family_map.items():

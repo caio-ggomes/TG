@@ -1,6 +1,7 @@
 import happybase
 import numpy as np
 import pandas as pd
+from tqdm import tqdm
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import cached_property
@@ -11,6 +12,18 @@ class DatabaseLoader(ABC):
     def __init__(self, sample_path: str, column_family_map: Dict[str, List[str]]) -> None:
         self.sample = pd.read_csv(sample_path, sep=";")
         self.column_family_map = column_family_map
+
+    @staticmethod
+    def _encode(object):
+        if isinstance(object, str):
+            return object.encode()
+        if isinstance(object, np.int64):
+            return str(object).encode()
+        if object is None:
+            return bytes()
+        if np.isnan(object):
+            return bytes()
+        raise NotImplementedError(f"Encode method not implemented for object of type {type(object)}")
 
     @abstractmethod
     def load(self, table: happybase.Table) -> None:
@@ -36,18 +49,6 @@ class SisceabParsingDatabaseLoader(DatabaseLoader):
 
     def _get_row_key(self, id_voo: str, horario_inicio: datetime, horario_fim: datetime) -> bytes:
         return (id_voo + " " +  horario_inicio.strftime("%Y-%m-%d %H:%M:%S")).encode()
-
-    @staticmethod
-    def _encode(object):
-        if isinstance(object, str):
-            return object.encode()
-        if isinstance(object, np.int64):
-            return str(object).encode()
-        if object is None:
-            return bytes()
-        if np.isnan(object):
-            return bytes()
-        raise NotImplementedError(f"Encode method not implemented for object of type {type(object)}")
 
 
 class SingleCellValueSisceabParsingDatabaseLoader(SisceabParsingDatabaseLoader):
@@ -76,7 +77,7 @@ class SingleCellValueSisceabParsingDatabaseLoader(SisceabParsingDatabaseLoader):
             rows[counter:min(counter + self.BATCH_SIZE, len(rows) - 1)]
             for counter in range(0, len(rows), self.BATCH_SIZE)
         ]
-        for sliced_rows_index in sliced_rows_indexes:
+        for sliced_rows_index in tqdm(sliced_rows_indexes):
             with table.batch() as batch:
                 for row in sliced_rows_index:
                     id_voo = self._id_voo.loc[row]
