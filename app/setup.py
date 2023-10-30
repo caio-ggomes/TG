@@ -18,7 +18,7 @@ def setup_table(connection: happybase.Connection, config_loader: ConfigLoader) -
         connection.delete_table(config_loader.table_name, disable=True)
     connection.create_table(
         name=config_loader.table_name,
-        families={family: dict() for family in config_loader.column_families}
+        families=config_loader.column_families_config,
     )
     return connection.table(config_loader.table_name)
 

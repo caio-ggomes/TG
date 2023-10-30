@@ -8,13 +8,19 @@ COLUMN_FAMILIES:
   - &INFO_VOO info_voo
   - &POSICAO posicao
 
+COLUMN_FAMILIES_CONFIG:
+  *EVENTOS: {}
+  *INFO_VOO: {}
+  *POSICAO:
+    max_versions: 100_000
+
 DATABASES_INFO:
-  # cat62:
-  #   SAMPLE_PATH: app/samples/cat62-ita-23jan-31jan.csv
-  #   COLUMN_FAMILY_MAP:
-  #     *EVENTOS: []
-  #     *INFO_VOO: []
-  #     *POSICAO: []
+  cat62:
+    SAMPLE_PATH: app/samples/cat62-reduced.csv
+    COLUMN_FAMILY_MAP:
+      *EVENTOS: []
+      *INFO_VOO: []
+      *POSICAO: ['nr_flightlevel', 'nr_speed', 'nr_speedbearing', 'vl_latitude', 'vl_longitude']
   sisceab:
     SAMPLE_PATH: app/samples/sisceab-23jan.csv
     COLUMN_FAMILY_MAP:

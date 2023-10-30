@@ -21,8 +21,8 @@ class ConfigLoader:
         return self.config["TABLE_NAME"]
 
     @property
-    def column_families(self) -> List[str]:
-        return self.config["COLUMN_FAMILIES"]
+    def column_families_config(self) -> Dict[str, dict]:
+        return self.config["COLUMN_FAMILIES_CONFIG"]
 
     @property
     def database_names(self) -> List[str]:
