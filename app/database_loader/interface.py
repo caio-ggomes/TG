@@ -1,11 +1,13 @@
-import happybase
-import numpy as np
-import pandas as pd
-from tqdm import tqdm
+import struct
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import cached_property
 from typing import Dict, List
+
+import happybase
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
 
 
 class DatabaseLoader(ABC):
@@ -18,7 +20,9 @@ class DatabaseLoader(ABC):
         if isinstance(object, str):
             return object.encode()
         if isinstance(object, np.int64):
-            return str(object).encode()
+            return struct.pack("i", object)
+        if isinstance(object, np.float64):
+            return struct.pack("f", object)
         if object is None:
             return bytes()
         if np.isnan(object):
