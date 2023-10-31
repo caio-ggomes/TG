@@ -16,10 +16,10 @@ def main():
     print("Fetching table.")
     table = connection.table(TABLE_NAME)
 
-    for key, data in table.scan(row_prefix=b"GLO9236"):
+    for key, data in table.scan(row_prefix=b"TAM3434"):
         print(key, data)
 
-    for value, timestamp in table.cells(row='GLO9236 2023-01-23 00:00:00', column="posicao:vl_latitude", include_timestamp=True)[-5:]:
+    for value, timestamp in table.cells(row='TAM3434 2023-01-23 10:56:00', column="posicao:vl_latitude", include_timestamp=True)[-5:]:
         print(struct.unpack("f", value)[0], datetime.fromtimestamp(timestamp))
 
     print("Finished inspection. Closing HBase connection.")
