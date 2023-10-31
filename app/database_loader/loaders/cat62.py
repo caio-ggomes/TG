@@ -26,14 +26,12 @@ class Cat62DatabaseLoader(SisceabParsingDatabaseLoader):
     def _get_column_values(self, id_voo: str, timestamp: datetime) -> dict:
         column_values = dict()
         for column_family, columns in self.column_family_map.items():
-            column_values.update(
-                {
-                    self._encode(f'{column_family}:{column}'): (
-                        self._encode(self.get_value(id_voo, timestamp, column))
-                    )
-                    for column in columns
-                }
-            )
+            for column in columns:
+                value = self.get_value(id_voo, timestamp, column)
+                if pd.notnull(value):
+                    encoded_key = self._encode(f'{column_family}:{column}')
+                    encoded_value = self._encode(value)
+                    column_values[encoded_key] = encoded_value
         return column_values
 
     def load(self, table: happybase.Table) -> None:

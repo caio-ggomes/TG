@@ -23,10 +23,6 @@ class DatabaseLoader(ABC):
             return struct.pack("i", object)
         if isinstance(object, np.float64):
             return struct.pack("f", object)
-        if object is None:
-            return bytes()
-        if np.isnan(object):
-            return bytes()
         raise NotImplementedError(f"Encode method not implemented for object of type {type(object)}")
 
     @abstractmethod
@@ -65,14 +61,12 @@ class SingleCellValueSisceabParsingDatabaseLoader(SisceabParsingDatabaseLoader):
     def _get_column_values(self, id_voo: str, horario_inicio: datetime, horario_fim: datetime) -> dict:
         column_values = dict()
         for column_family, columns in self.column_family_map.items():
-            column_values.update(
-                {
-                    self._encode(f'{column_family}:{column}'): (
-                        self._encode(self.get_value(id_voo, horario_inicio, horario_fim, column))
-                    )
-                    for column in columns
-                }
-            )
+            for column in columns:
+                value = self.get_value(id_voo, horario_inicio, horario_fim, column)
+                if pd.notnull(value):
+                    encoded_key = self._encode(f'{column_family}:{column}')
+                    encoded_value = self._encode(value)
+                    column_values[encoded_key] = encoded_value
         return column_values
 
     def load(self, table: happybase.Table) -> None:
